@@ -8,7 +8,7 @@ import './place.css';
 
 
 const Place = ({ item, order, onIncrementPosition, onDecrementPosition, area }) => {
-  const price = useMemo(() => {
+  const [price, priceInt] = useMemo(() => {
     const foodIds = new Set((item.foods || []).map(item => item.id));
 
     const result = Object.values(order)
@@ -23,8 +23,10 @@ const Place = ({ item, order, onIncrementPosition, onDecrementPosition, area }) 
         return result + parseInt(price) * parseInt(count);
       }, 0);
 
-    return accounting.formatNumber(result, 0, ' ');
+      return [accounting.formatNumber(result, 0, ' '), result];
   }, [ order, item ]);
+
+  const NextTag = priceInt === 0 ? 'button' : Link;
 
   return (
     <div className="Place">
@@ -101,9 +103,9 @@ const Place = ({ item, order, onIncrementPosition, onDecrementPosition, area }) 
         )))}
       </ul>
       <footer className="Place__footer">
-        <Link to={`/basket/${area.id}/${item.id}`} className="Place__order">
+        <NextTag to={`/basket/${area.id}/${item.id}`} disabled={+priceInt === 0} className="Place__order">
           Оформить заказ ({price})
-        </Link>
+        </NextTag>
       </footer>
     </div>
   );
