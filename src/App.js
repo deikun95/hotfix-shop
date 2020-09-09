@@ -33,7 +33,7 @@ const FOOD_AREAS = [{
 			name: 'Классик',
 			price: 150,
 		}, {
-			id: 'bigmac',
+			id: 'potatoes',
 			image: OneTowar,
 			name: 'Картофель фри',
 			price: 50,
@@ -163,18 +163,18 @@ const App = () => {
 						order={order}
 						orderStatuses={orderStatuses}
 						foodAreas={FOOD_AREAS}
-						setFinishedOrder={({ itemId }) => {
-							const nextStatuses = {...orderStatuses};
-
-							nextStatuses[itemId] = 'DONE';
-
-							setOrderStatuses(nextStatuses);
-							localStorage.setItem('orderStatuses', JSON.stringify(nextStatuses));
-						}}
 						setActiveOrder={({ itemId }) => {
 							const nextStatuses = {...orderStatuses};
 
 							nextStatuses[itemId] = 'ACTIVE';
+
+							setOrderStatuses(nextStatuses);
+							localStorage.setItem('orderStatuses', JSON.stringify(nextStatuses));
+						}}
+						setCanceledOrder={({ itemId }) => {
+							const nextStatuses = {...orderStatuses};
+
+							nextStatuses[itemId] = 'CANCELED';
 
 							setOrderStatuses(nextStatuses);
 							localStorage.setItem('orderStatuses', JSON.stringify(nextStatuses));
