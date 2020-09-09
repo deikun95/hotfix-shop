@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { withRouter, Link } from "react-router-dom";
 import accounting from "accounting";
 
@@ -6,6 +6,11 @@ import Checkbox from "./Checkbox";
 
 import edit from "../img/edit.svg";
 import "./place.css";
+
+const saveBag = {
+  time: '',
+  selfService: false
+}
 
 const Basket = ({
   match: {
@@ -15,8 +20,8 @@ const Basket = ({
   order,
 }) => {
   const [faster, setFaster] = useState(true);
-  const [time, setTime] = useState("");
-  const [selfService, setSelfService] = useState(false);
+  const [time, setTime] = useState(saveBag.time);
+  const [selfService, setSelfService] = useState(saveBag.selfService);
   const area = foodAreas.filter((area) => area.id === areaId)[0];
   const item = area.items.filter((item) => item.id === itemId)[0];
 
@@ -39,6 +44,15 @@ const Basket = ({
 
     return [accounting.formatNumber(result, 0, " "), products];
   }, [order, item]);
+
+  const proxyFaster = () => time === '';
+
+  useEffect(() => {
+    return () => {
+      saveBag.time = time
+      saveBag.selfService = selfService
+    }
+  })
 
   return (
     <div className="Place">
@@ -90,7 +104,7 @@ const Basket = ({
         <div className="Place__choice-item">
           <span>Как можно быстрее</span>
           <Checkbox
-            checked={faster}
+            checked={proxyFaster()}
             onToggle={() => {
               if (faster) {
                 setFaster(false);
